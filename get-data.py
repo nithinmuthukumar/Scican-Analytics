@@ -6,19 +6,14 @@ from oauth2client.service_account import ServiceAccountCredentials
 import numpy as np
 import pandas as pd
 import matplotlib as pt
-from itertools import *
-age_groups=[(8,13),(13,18),(18,30),(30,40),(40,50),(50,100)]
-def get_age_group(age):
+age_groups=[(10,15),(15,20),(20,30),(30,40),(40,50),(50,100)]
+frequencyVals={"Very Rarely":0,"Rarely":1,"Occasionally":2,"Frequently":3,"Very Frequently":4}
+def get_group(responses,ind,col):
+    x=responses[col].loc[ind]
 
-    for age_group in age_groups:
-        if age_group[0]<=age<age_group[1]:
-            return age_group
-    return (-1,-1)
-
-
-
-
-
+    for j,i in enumerate(age_groups):
+        if i[0]<=x<i[1]:
+            return j
 def get_responses():
 
     scope = ['https://www.googleapis.com/auth/drive']
@@ -30,11 +25,42 @@ def get_responses():
 
 
 if __name__ == '__main__':
-    frame=get_responses()
-    fx=lambda x:get_age_group(int(x["age"]))
-    frame.sort(key=fx)
-    groupby(frame,key=fx)
-    print(frame)
+    responses=pd.DataFrame(get_responses())
+    #gender analysis
+    print("gender analysis")
+    num_males=sum(1 for i in responses['Gender'] if i == 'Male')
+    num_fems=sum(1 for i in responses['Gender'] if i=='Female')
+    for j in responses.iloc[:,5:9]:
+        print(j)
+        if j=="Frequency":
+            m_interest_avg = sum(frequencyVals[a] for a, b in zip(responses[j], responses['Gender']) if b == 'Male')/num_males
+            f_interest_avg = sum(frequencyVals[a] for a, b in zip(responses[j], responses['Gender']) if b == 'Female')/num_fems
+
+        else:
+            m_interest_avg=sum(a for a,b in zip(responses[j],responses['Gender']) if b=='Male' and a)/num_males
+            f_interest_avg=sum(a for a, b in zip(responses[j], responses['Gender']) if b == 'Female' and a)/num_fems
+        print(f"male average {m_interest_avg}")
+        print(f"female {f_interest_avg}")
+
+    #age analysis
+    #partition by age groups
+    print("age analysis")
+    age_partitions=responses.groupby(lambda x:get_group(responses,x,'Age'))
+    for i in range(6):
+        group=age_partitions.get_group(i)
+        size=len(group)
+        print(f"Age group: {age_groups[i]}")
+        for j in group.iloc[:,5:9]:
+            print(j)
+            print(sum(i if type(i) !=str else frequencyVals[i] for i in [w for w in group[j] if w])/size)
+
+
+
+
+
+
+
+
 
 
 

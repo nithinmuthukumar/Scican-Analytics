@@ -8,11 +8,12 @@ from oauth2client.service_account import ServiceAccountCredentials
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-age_groups=[(10,15),(15,20),(20,30),(30,40),(40,50),(50,100)]
+age_groups=[(10,15),(15,20),(20,30),(30,40),(40,50),(50,60)]
 frequencyVals={"Very Rarely":0,"Rarely":1,"Occasionally":2,"Frequently":3,"Very Frequently":4}
 def get_group(responses,ind,col):
     x=responses[col].loc[ind]
-
+    if x >=60:
+        print(True)
     for j,i in enumerate(age_groups):
         if i[0]<=x<i[1]:
             return j
@@ -51,7 +52,7 @@ if __name__ == '__main__':
         print("age analysis")
 
         age_partitions = responses.groupby(lambda x: get_group(responses, x, 'Age'))
-        for i in range(6):
+        for i in range(len(age_groups)):
             group = age_partitions.get_group(i)
             size = len(group)
             print(f"Age group: {age_groups[i][0]}-{age_groups[i][1] - 1}")
@@ -67,7 +68,7 @@ if __name__ == '__main__':
 
     for var, values in data.items():
 
-        plt.bar([f'{age_groups[i][0]}-{age_groups[i][1]-1}' for i in range(6)], values)
+        plt.bar([f'{age_groups[i][0]}-{age_groups[i][1]-1}' for i in range(len(age_groups))], values)
         plt.xlabel("Age Groups")
         plt.ylabel(var)
         plt.title(f"Age groups vs. {var}.png")

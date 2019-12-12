@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Optional
 
 import gspread
@@ -5,7 +6,7 @@ from gspread import Worksheet
 from oauth2client.service_account import ServiceAccountCredentials
 import numpy as np
 import pandas as pd
-import matplotlib as pt
+import matplotlib.pyplot as plt
 age_groups=[(10,15),(15,20),(20,30),(30,40),(40,50),(50,100)]
 frequencyVals={"Very Rarely":0,"Rarely":1,"Occasionally":2,"Frequently":3,"Very Frequently":4}
 def get_group(responses,ind,col):
@@ -44,16 +45,26 @@ if __name__ == '__main__':
 
     #age analysis
     #partition by age groups
-    print("age analysis")
-    age_partitions=responses.groupby(lambda x:get_group(responses,x,'Age'))
-    for i in range(6):
-        group=age_partitions.get_group(i)
-        size=len(group)
-        print(f"Age group: {age_groups[i]}")
-        for j in group.iloc[:,5:9]:
-            print(j)
-            print(sum(i if type(i) !=str else frequencyVals[i] for i in [w for w in group[j] if w])/size)
+        data = defaultdict(list)
+        print("age analysis")
+        age_partitions = responses.groupby(lambda x: get_group(responses, x, 'Age'))
+        for i in range(6):
+            group = age_partitions.get_group(i)
+            size = len(group)
+            print(f"Age group: {age_groups[i][0]}-{age_groups[i][1] - 1}")
+            for j in group.iloc[:, 5:9]:
+                print(j)
+                data[j].append(sum(i if type(i) != str else frequencyVals[i] for i in [w for w in group[j] if w])/size)
+                print(sum(i if type(i) != str else frequencyVals[i] for i in [w for w in group[j] if w])/size)
+        for var, values in data.items():
 
+            plt.bar([i for i in range(6)], values)
+            plt.xlabel("Age Groups")
+            plt.ylabel(var)
+            plt.title(f"Age groups vs. {var}")
+            plt.savefig(f"Age groups vs. {var}.png")
+            plt.close()
+        
 
 
 

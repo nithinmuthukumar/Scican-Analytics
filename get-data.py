@@ -58,13 +58,13 @@ if __name__ == '__main__':
                 print(sum(i if type(i) != str else frequencyVals[i] for i in [w for w in group[j] if w])/size)
         for var, values in data.items():
 
-            plt.bar([i for i in range(6)], values)
+            plt.bar([f'{age_groups[i][0]}-{age_groups[i][1]-1}' for i in range(6)], values)
             plt.xlabel("Age Groups")
             plt.ylabel(var)
             plt.title(f"Age groups vs. {var}")
             plt.savefig(f"Age groups vs. {var}.png")
             plt.close()
-        
+
 
 
 

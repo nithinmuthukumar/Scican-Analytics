@@ -1,4 +1,5 @@
 from collections import defaultdict
+from collections import Counter
 from typing import Optional
 
 import gspread
@@ -46,7 +47,9 @@ if __name__ == '__main__':
     #age analysis
     #partition by age groups
         data = defaultdict(list)
+        genre_data =[]
         print("age analysis")
+
         age_partitions = responses.groupby(lambda x: get_group(responses, x, 'Age'))
         for i in range(6):
             group = age_partitions.get_group(i)
@@ -54,8 +57,14 @@ if __name__ == '__main__':
             print(f"Age group: {age_groups[i][0]}-{age_groups[i][1] - 1}")
             for j in group.iloc[:, 5:9]:
                 print(j)
-                data[j].append(sum(i if type(i) != str else frequencyVals[i] for i in [w for w in group[j] if w])/size)
-                print(sum(i if type(i) != str else frequencyVals[i] for i in [w for w in group[j] if w])/size)
+                data[j].append(sum(x if type(x) != str else frequencyVals[x] for x in [w for w in group[j] if w])/size)
+                print(sum(x if type(x) != str else frequencyVals[x] for x in [w for w in group[j] if w])/size)
+            # gets frequency of genres which have been cleaned
+            genre_freq = Counter(map(lambda x: x.title().strip(),group['Favourite Genre']))
+            genre_data.append(genre_freq.items())
+
+
+
         for var, values in data.items():
 
             plt.bar([f'{age_groups[i][0]}-{age_groups[i][1]-1}' for i in range(6)], values)
@@ -64,6 +73,19 @@ if __name__ == '__main__':
             plt.title(f"Age groups vs. {var}")
             plt.savefig(f"Age groups vs. {var}.png")
             plt.close()
+        for i,j in enumerate(genre_data):
+            labels=[i[0] for i in j]
+            values=[i[1] for i in j]
+
+
+            fig1, ax1 = plt.subplots()
+            ax1.pie(values,labels=labels,startangle=90)
+            ax1.axis('equal')
+            plt.tight_layout()
+            plt.savefig(f'Favourite genre breakdown of {age_groups[i][0]}-{age_groups[i][1]-1} year olds')
+            plt.close()
+
+
 
 
 

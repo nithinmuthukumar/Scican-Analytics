@@ -65,26 +65,32 @@ if __name__ == '__main__':
 
 
 
-        for var, values in data.items():
+    for var, values in data.items():
 
-            plt.bar([f'{age_groups[i][0]}-{age_groups[i][1]-1}' for i in range(6)], values)
-            plt.xlabel("Age Groups")
-            plt.ylabel(var)
-            plt.title(f'Favourite genre breakdown of {age_groups[i][0]}-{age_groups[i][1]-1} year olds')
-            plt.savefig(f"Age groups vs. {var}.png")
-            plt.close()
-        for i,j in enumerate(genre_data):
-            plt.figure(figsize=(12, 5.0))
-            plt.title(f'{age_groups[i][0]}-{age_groups[i][1]-1}')
-            labels=[i[0] for i in j]
-            values=[i[1] for i in j]
+        plt.bar([f'{age_groups[i][0]}-{age_groups[i][1]-1}' for i in range(6)], values)
+        plt.xlabel("Age Groups")
+        plt.ylabel(var)
+        plt.title(f"Age groups vs. {var}.png")
+        plt.savefig(f"Age groups vs. {var}.png")
+        plt.close()
+    other_threshold=0.02
+    for i,j in enumerate(genre_data):
+        plt.figure(figsize=(12, 5.0))
+        plt.title(f'{age_groups[i][0]}-{age_groups[i][1]-1}')
 
-
-            fig1, ax1 = plt.subplots()
-            ax1.pie(values,labels=labels,startangle=90)
-            ax1.axis('equal')
-            plt.savefig(f'Favourite genre breakdown of {age_groups[i][0]}-{age_groups[i][1]-1} year olds')
-            plt.close()
+        size=len(age_partitions.get_group(i))
+        other_tot=sum(i[1] for i in j if i[1]<size*other_threshold)
+        labels=[i[0] for i in j if i[1]>=size*other_threshold]
+        values=[i[1] for i in j if i[1]>=size*other_threshold]
+        if other_tot>0:
+            labels+=["Other"]
+            values+=[other_tot]
+        print(labels)
+        print(values)
+        fig1, ax1 = plt.subplots()
+        ax1.pie(values,labels=labels,startangle=90,explode=[0.05 for i in range(len(values))])
+        plt.savefig(f'Favourite genre breakdown of {age_groups[i][0]}-{age_groups[i][1]-1} year olds')
+        plt.close()
 
 
 

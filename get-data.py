@@ -64,8 +64,7 @@ if __name__ == '__main__':
             genre_freq = Counter(map(lambda x: x.title().strip(),group['Favourite Genre']))
             genre_data.append(genre_freq.items())
 
-
-
+    plt.rcParams['font.size'] = 9
     for var, values in data.items():
 
         plt.bar([f'{age_groups[i][0]}-{age_groups[i][1]-1}' for i in range(len(age_groups))], values)
@@ -76,7 +75,7 @@ if __name__ == '__main__':
         plt.close()
     other_threshold=0.02
     for i,j in enumerate(genre_data):
-        plt.figure(figsize=(12, 5.0))
+        plt.figure(figsize=(12, 12))
         plt.title(f'{age_groups[i][0]}-{age_groups[i][1]-1}')
 
         size=len(age_partitions.get_group(i))
@@ -89,7 +88,7 @@ if __name__ == '__main__':
         print(labels)
         print(values)
         fig1, ax1 = plt.subplots()
-        ax1.pie(values,labels=labels,startangle=90,explode=[0.05 for i in range(len(values))])
+        ax1.pie(values,labels=labels,startangle=70,explode=[0.05 for i in range(len(values))],radius=1.3)
         plt.savefig(f'Favourite genre breakdown of {age_groups[i][0]}-{age_groups[i][1]-1} year olds')
         plt.close()
 

@@ -70,10 +70,12 @@ if __name__ == '__main__':
             plt.bar([f'{age_groups[i][0]}-{age_groups[i][1]-1}' for i in range(6)], values)
             plt.xlabel("Age Groups")
             plt.ylabel(var)
-            plt.title(f"Age groups vs. {var}")
+            plt.title(f'Favourite genre breakdown of {age_groups[i][0]}-{age_groups[i][1]-1} year olds')
             plt.savefig(f"Age groups vs. {var}.png")
             plt.close()
         for i,j in enumerate(genre_data):
+            plt.figure(figsize=(12, 5.0))
+            plt.title(f'{age_groups[i][0]}-{age_groups[i][1]-1}')
             labels=[i[0] for i in j]
             values=[i[1] for i in j]
 
@@ -81,7 +83,6 @@ if __name__ == '__main__':
             fig1, ax1 = plt.subplots()
             ax1.pie(values,labels=labels,startangle=90)
             ax1.axis('equal')
-            plt.tight_layout()
             plt.savefig(f'Favourite genre breakdown of {age_groups[i][0]}-{age_groups[i][1]-1} year olds')
             plt.close()
 

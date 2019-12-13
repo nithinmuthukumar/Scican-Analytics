@@ -90,7 +90,7 @@ if __name__ == '__main__':
         print(labels)
         print(values)
         fig1, ax1 = plt.subplots()
-        ax1.pie(values,labels=labels,startangle=70,explode=[0.05 for i in range(len(values))],radius=1.3)
+        ax1.pie(values,labels=labels,startangle=70,explode=[0.05 for i in range(len(values))],radius=1.3,autopct='%.1f %%')
         plt.savefig(f'Favourite genre breakdown of {age_groups[i][0]}-{age_groups[i][1]-1} year olds')
         plt.close()
 

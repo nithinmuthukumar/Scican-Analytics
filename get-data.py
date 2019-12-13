@@ -66,11 +66,13 @@ if __name__ == '__main__':
 
     plt.rcParams['font.size'] = 9
     for var, values in data.items():
+        if var=="Interest":
+            values=[i-1 for i in values]
 
         plt.bar([f'{age_groups[i][0]}-{age_groups[i][1]-1}' for i in range(len(age_groups))], values)
         plt.xlabel("Age Groups")
         plt.ylabel(var)
-        plt.title(f"Age groups vs. {var}.png")
+        plt.title(f"Age groups vs. {var}")
         plt.savefig(f"Age groups vs. {var}.png")
         plt.close()
     other_threshold=0.02

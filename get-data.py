@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
     plt.rcParams['font.size'] = 9
     for var, values in data.items():
-        if var=="Interest":
+        if var=="Interest" or var=="Access":
             values=[i-1 for i in values]
 
         plt.bar([f'{age_groups[i][0]}-{age_groups[i][1]-1}' for i in range(len(age_groups))], values)
